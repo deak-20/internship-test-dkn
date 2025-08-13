@@ -1,0 +1,6 @@
+Nomor Rekening|Nama|Saldo Tabungan
+0020304001|Andi Prasetyo|1500000
+0020304002|Sinta Dewi|25000000
+0020304003|Budi Santoso|730000
+0020304004|Ratna Wulandari|5000000
+||
