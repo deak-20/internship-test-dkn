@@ -4,15 +4,23 @@
 <h2>Pilih File TXT</h2>
 
 @if(session('error'))
-    <div>{{ session('error') }}</div>
+    <p><strong>❌ {{ session('error') }}</strong></p>
 @endif
 
-<form action="{{ route('filePickerRead') }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    <div>
-        <label for="txt_file">Pilih File (.txt)</label>
-        <input type="file" name="txt_file" id="txt_file" accept=".txt" required>
-    </div>
-    <button type="submit">Lihat Data</button>
-</form>
+<table border="1" cellpadding="10" cellspacing="0">
+    <tr>
+        <td>
+            <form action="{{ route('filePickerRead') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <p>
+                    <label for="txt_file"><strong>Pilih File (.txt):</strong></label><br>
+                    <input type="file" name="txt_file" id="txt_file" accept=".txt" required>
+                </p>
+                <p>
+                    <button type="submit">🔍 Lihat Data</button>
+                </p>
+            </form>
+        </td>
+    </tr>
+</table>
 @endsection

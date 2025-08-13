@@ -4,11 +4,11 @@
 <h2>Hasil Pembacaan File</h2>
 
 @if(empty($headers) || empty($data))
-    <div>File kosong atau format tidak sesuai.</div>
+    <p><strong>⚠ File kosong atau format tidak sesuai.</strong></p>
 @else
-    <table border="1">
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
         <thead>
-            <tr>
+            <tr bgcolor="#f0f0f0">
                 @foreach ($headers as $header)
                     <th>{{ $header }}</th>
                 @endforeach
@@ -18,7 +18,7 @@
             @foreach ($data as $row)
                 <tr>
                     @foreach ($row as $cell)
-                        <td>{{ $cell }}</td>
+                        <td align="center">{{ $cell }}</td>
                     @endforeach
                 </tr>
             @endforeach
@@ -26,7 +26,8 @@
     </table>
 @endif
 
-<div>
-    <a href="{{ route('filePicker') }}">Kembali</a>
-</div>
+<br>
+<p>
+    <a href="{{ route('filePicker') }}">⬅ Kembali</a>
+</p>
 @endsection

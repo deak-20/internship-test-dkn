@@ -6,11 +6,10 @@
 </head>
 <body>
     <nav>
-        <div>
-            <a href="{{ route('read') }}">🏦 Bank Tabungan</a>
-            <a href="{{ route('read') }}">Data Default</a>
-            <a href="{{ route('filePicker') }}">Pilih File</a>
-        </div>
+        <h3>🏦 Bank Tabungan</h3>
+        <a href="{{ route('read') }}">Data Default</a> | 
+        <a href="{{ route('filePicker') }}">Pilih File</a>
+        <hr>
     </nav>
 
     <div>

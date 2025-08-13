@@ -4,15 +4,15 @@
 <h2>Data Tabungan</h2>
 
 @if(session('success'))
-    <div>{{ session('success') }}</div>
+    <p><strong>✓ {{ session('success') }}</strong></p>
 @endif
 @if(isset($info))
-    <div>{{ $info }}</div>
+    <p><em>ℹ {{ $info }}</em></p>
 @endif
 
-<table border="1">
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
     <thead>
-        <tr>
+        <tr bgcolor="#f0f0f0">
             @foreach ($headers as $header)
                 <th>{{ $header }}</th>
             @endforeach
@@ -22,15 +22,16 @@
         @foreach ($data as $row)
             <tr>
                 @foreach ($row as $cell)
-                    <td>{{ $cell }}</td>
+                    <td align="center">{{ $cell }}</td>
                 @endforeach
             </tr>
         @endforeach
     </tbody>
 </table>
 
-<div>
-    <a href="{{ route('edit') }}">Edit Data</a>
-    <a href="{{ route('downloadDefault') }}">Download File</a>
-</div>
+<br>
+<p>
+    <a href="{{ route('edit') }}">📝 Edit Data</a> | 
+    <a href="{{ route('downloadDefault') }}">📥 Download File</a>
+</p>
 @endsection
