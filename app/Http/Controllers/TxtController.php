@@ -3,18 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 
 class TxtController extends Controller
 {
-    private function getFilePath()
+    private function getDefaultFilePath()
     {
         return base_path('data/data.txt');
     }
 
-    private function readFile($filePath = null)
+    private function readFile($filePath)
     {
-        $filePath = $filePath ?? $this->getFilePath();
         if (!file_exists($filePath)) {
             return [[], []];
         }
@@ -30,40 +28,48 @@ class TxtController extends Controller
         return [$headers, $data];
     }
 
-    // 1. Data Default
+    private function writeFile($headers, $data, $filePath)
+    {
+        $lines = [];
+        $lines[] = implode('|', $headers);
+        foreach ($data as $row) {
+            $lines[] = implode('|', $row);
+        }
+        file_put_contents($filePath, implode("\n", $lines));
+    }
+
+    // ================= DEFAULT FILE =================
     public function read()
     {
-        [$headers, $data] = $this->readFile();
+        [$headers, $data] = $this->readFile($this->getDefaultFilePath());
         return view('read', compact('headers', 'data'));
     }
 
     public function edit()
     {
-        [$headers, $data] = $this->readFile();
-        return view('edit', compact('headers', 'data'));
+        [$headers, $data] = $this->readFile($this->getDefaultFilePath());
+        return view('edit', [
+            'headers' => $headers,
+            'data' => $data,
+            'filePath' => $this->getDefaultFilePath(),
+            'isPicker' => false
+        ]);
     }
 
     public function update(Request $request)
     {
         $headers = $request->input('headers', []);
         $data = $request->input('data', []);
-
-        $lines = [];
-        $lines[] = implode('|', $headers);
-        foreach ($data as $row) {
-            $lines[] = implode('|', $row);
-        }
-
-        file_put_contents($this->getFilePath(), implode("\n", $lines));
+        $this->writeFile($headers, $data, $this->getDefaultFilePath());
         return redirect()->route('read')->with('success', 'Data berhasil diperbarui!');
     }
 
     public function downloadDefault()
     {
-        return Response::download($this->getFilePath(), 'data.txt');
+        return response()->download($this->getDefaultFilePath(), 'data_tabungan.txt');
     }
 
-    // 2. File Picker
+    // ================= FILE PICKER (VIEW ONLY) =================
     public function filePicker()
     {
         return view('file_picker');
@@ -72,48 +78,19 @@ class TxtController extends Controller
     public function filePickerRead(Request $request)
     {
         if (!$request->hasFile('txt_file')) {
-            return redirect()->back()->with('error', 'Tidak ada file yang diupload.');
+            return back()->with('error', 'Pilih file terlebih dahulu.');
         }
 
         $file = $request->file('txt_file');
         if ($file->getClientOriginalExtension() !== 'txt') {
-            return redirect()->back()->with('error', 'File harus berformat .txt');
+            return back()->with('error', 'File harus berformat .txt');
         }
 
-        $path = $file->storeAs('uploads', $file->getClientOriginalName());
-        [$headers, $data] = $this->readFile(storage_path('app/' . $path));
+        // Gunakan path asli file upload
+        $filePath = $file->getRealPath();
 
-        return view('file_picker', [
-            'headers' => $headers,
-            'data' => $data,
-            'file_path' => storage_path('app/' . $path)
-        ]);
-    }
+        [$headers, $data] = $this->readFile($filePath);
 
-    public function filePickerUpdate(Request $request)
-    {
-        $filePath = $request->input('file_path');
-        $data = $request->input('data', []);
-        $headers = $request->input('headers', []);
-
-        $lines = [];
-        if (!empty($headers)) {
-            $lines[] = implode('|', $headers);
-        }
-        foreach ($data as $row) {
-            $lines[] = implode('|', $row);
-        }
-
-        file_put_contents($filePath, implode("\n", $lines));
-        return redirect()->route('filePicker')->with('success', 'File berhasil diperbarui & disimpan.');
-    }
-
-    public function filePickerDownload(Request $request)
-    {
-        $path = $request->query('path');
-        if (!file_exists($path)) {
-            return redirect()->back()->with('error', 'File tidak ditemukan.');
-        }
-        return Response::download($path, basename($path));
+        return view('file_picker_view', compact('headers', 'data'));
     }
 }
