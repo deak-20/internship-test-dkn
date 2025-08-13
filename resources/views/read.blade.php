@@ -1,17 +1,17 @@
 @extends('app')
 
 @section('content')
-<h2 class="mb-4"><i class="bi bi-table"></i> Data Tabungan</h2>
+<h2>Data Tabungan</h2>
 
 @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
+    <div>{{ session('success') }}</div>
 @endif
 @if(isset($info))
-    <div class="alert alert-info">{{ $info }}</div>
+    <div>{{ $info }}</div>
 @endif
 
-<table class="table table-bordered table-striped text-center">
-    <thead class="table-dark">
+<table border="1">
+    <thead>
         <tr>
             @foreach ($headers as $header)
                 <th>{{ $header }}</th>
@@ -29,10 +29,8 @@
     </tbody>
 </table>
 
-<a href="{{ route('edit') }}" class="btn btn-warning">
-    <i class="bi bi-pencil-square"></i> Edit Data
-</a>
-<a href="{{ route('downloadDefault') }}" class="btn btn-success">
-    <i class="bi bi-download"></i> Download File
-</a>
+<div>
+    <a href="{{ route('edit') }}">Edit Data</a>
+    <a href="{{ route('downloadDefault') }}">Download File</a>
+</div>
 @endsection
